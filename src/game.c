@@ -6,12 +6,12 @@
 #include <screen.h>
 #include <keyboard.h>
 
-#define WIDTH 40
-#define HEIGHT 20
-#define CLI_KEY_LEFT 109
-#define CLI_KEY_RIGHT 108
-#define CLI_KEY_F 'F'
-#define CLI_KEY_SPACE 32
+#define LARGURA 40
+#define ALTURA 20
+#define ESQUERDA 109
+#define DIREITA 108
+#define FIM 70
+#define TIRO 32
 
 // Estruturas para o jogador e os invasores
 typedef struct {
@@ -26,18 +26,18 @@ typedef struct {
 // Variáveis globais
 Nave jogador;
 Projetil projeteis[5];
-int invasores[WIDTH];
+int invasores[LARGURA];
 int pontuacao = 0;
 
 // Inicializa o jogo
 void inicializar() {
     screenInit(1);
     keyboardInit();
-    timerInit(5000);
+    timerInit(50);
 
     // Inicializa o jogador
-    jogador.x = WIDTH / 2;
-    jogador.y = HEIGHT - 1;
+    jogador.x = LARGURA / 2;
+    jogador.y = ALTURA - 1;
 
     // Inicializa os projeteis
     for (int i = 0; i < 5; i++) {
@@ -45,7 +45,7 @@ void inicializar() {
     }
 
     // Inicializa os invasores
-    for (int i = 0; i < WIDTH; i++) {
+    for (int i = 0; i < LARGURA; i++) {
         invasores[i] = 1;
     }
 }
@@ -54,9 +54,9 @@ void inicializar() {
 void desenhar() {
 
     // Desenha os invasores
-    for (int i = 0; i < WIDTH; i++) {
+    for (int i = 0; i < LARGURA; i++) {
         if (invasores[i]) {
-            screenGotoxy(i, 1);
+            screenGotoxy(i+1, 1);
             printf("*");
             screenUpdate();
         }
@@ -77,14 +77,15 @@ void desenhar() {
     screenUpdate();
 
     // Desenha a pontuação
-    screenGotoxy(MAXX - 8, MAXY - 8);
-    printf("Pontuação: %d", pontuacao);
+    screenGotoxy(MAXX-16, MAXY);
+    printf("Pontuação: %3d", pontuacao);
 
     screenUpdate();
 }
 
 // Lógica do jogo
 void atualizar() {
+    
     // Movimenta os projeteis
     for (int i = 0; i < 5; i++) {
         if (projeteis[i].ativo) {
@@ -105,25 +106,23 @@ void atualizar() {
             }
         }
     }
-    //screenUpdate();
 }
 
 // Controle do jogador e dos projeteis
 int controle() {
-    int tecla; 
 
     if(keyhit()) {
-       tecla = readch();
+       int tecla = readch();
 
         // Movimento do jogador
-        if (tecla == CLI_KEY_LEFT && jogador.x > 0) {
+        if (tecla == ESQUERDA && jogador.x > 0) {
             jogador.x -= 1;
-        } else if (tecla == CLI_KEY_RIGHT && jogador.x < WIDTH - 1) {
+        } else if (tecla == DIREITA && jogador.x < LARGURA - 1) {
             jogador.x += 1;
         }
 
         // Disparo do jogador
-        if (tecla == CLI_KEY_SPACE) {
+        if (tecla == TIRO) {
             for (int i = 0; i < 5; i++) {
                 if (!projeteis[i].ativo) {
                     projeteis[i].x = jogador.x;
@@ -133,22 +132,21 @@ int controle() {
                 }
             }
         }
-        // Fim do jogo
-        if (tecla == CLI_KEY_F) {
-            return CLI_KEY_F;
+        // fim do jogo
+        if (tecla == FIM) {
+            return 1;
         }
     }
+    return 0;
 }
 
 // Loop principal do jogo
 void loop_jogo() {
 
-    while (1) {
+    while (!controle()) {
         desenhar();
         atualizar();
-        if (controle() == CLI_KEY_F) break;
-        screenGotoxy(MAXX, MAXY-10);
-        timerPrint();
+        
     }
 }
 
