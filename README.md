@@ -3,6 +3,7 @@ Implementação do famoso Invasores Espaciais usando a linguagem C.
 Equipe:<br>
 Fernando Cyreno Rangel<br>
 Ivo Caetano<br>
+Marcello Fernandes<br>
 <br>
 Disciplina:<br>
 Programação Imperativa e Funcional - 2024.2<br>
