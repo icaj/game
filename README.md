@@ -1,4 +1,4 @@
-Implementação do famoso Space Invaders usando a linguagem C.
+Implementação do famoso Invasores Espaciais usando a linguagem C.
 
 Equipe:<br>
 Fernando Cyreno Rangel<br>
