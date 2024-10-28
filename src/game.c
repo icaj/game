@@ -6,28 +6,33 @@
 #include <screen.h>
 #include <keyboard.h>
 
-#define LARGURA 80
-#define ALTURA 24
-#define ESQUERDA 's' //109
-#define DIREITA 'l' //108
+#define DELAY 60
+#define ESQUERDA 'a' 
+#define DIREITA 'd' 
 #define FIM 'f'
 #define TIRO ' '
 #define INVASORES 19
+#define PROJETEIS 5
 
 // Estruturas para o jogador e os invasores
 typedef struct {
     int x, y;
-} Nave;
+} Jogador;
 
 typedef struct {
     int x, y;
     int ativo;
 } Projetil;
 
+typedef struct {
+    int x, y;
+    int ativo;
+} Nave;
+
 // Variáveis globais
-Nave jogador;
-Projetil projeteis[5];
-int invasores[INVASORES];
+Jogador jogador;
+Projetil projeteis[PROJETEIS];
+Nave invasores[INVASORES];
 int pontuacao = 0;
 
 // Inicializa o jogo
@@ -44,7 +49,11 @@ void inicializar() {
 
     // Inicializa os invasores
     for (int i = 0; i < INVASORES; i++) {
-        invasores[i] = 1;
+        invasores[i].ativo = 1;
+        invasores[i].x = (MAXX/INVASORES) + ((MAXX/INVASORES) * i);
+        invasores[i].y = 4;
+        screenGotoxy(invasores[i].x, invasores[i].y);
+        printf("*");
     }
 }
 
@@ -53,15 +62,20 @@ void desenhar() {
 
     // Desenha os invasores
     for (int i = 0; i < INVASORES; i++) {
-        if (invasores[i]) {
-            screenGotoxy((MAXX/INVASORES) + ((MAXX/INVASORES) * i), 4);
+        screenGotoxy((MAXX/INVASORES) + ((MAXX/INVASORES) * i), 4);
+        if(invasores[i].ativo)
             printf("*");
-        }
+        else
+            printf(" ");
     }
 
     // Desenha os projeteis
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < PROJETEIS; i++) {
         if (projeteis[i].ativo) {
+            if(projeteis[i].y != jogador.y-1) {
+                screenGotoxy(projeteis[i].x, projeteis[i].y+1);
+                printf(" ");
+            }
             screenGotoxy(projeteis[i].x, projeteis[i].y);
             printf("|");
         }
@@ -82,11 +96,8 @@ void desenhar() {
 void atualizar() {
     
     // Movimenta os projeteis
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < PROJETEIS; i++) {
         if (projeteis[i].ativo) {
-            screenGotoxy(projeteis[i].x, projeteis[i].y-1);
-            printf(" ");
-            screenUpdate();
             projeteis[i].y -= 1;
             if (projeteis[i].y < 1) {
                 projeteis[i].ativo = 0;
@@ -95,15 +106,16 @@ void atualizar() {
     }
 
     // Verifica colisão dos projeteis com os invasores
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < PROJETEIS; i++) {
         if (projeteis[i].ativo) {
-            if (invasores[projeteis[i].x]) {
-                invasores[projeteis[i].x] = 0;
+            if (invasores[i].x == projeteis[i].x && invasores[i].y == projeteis[i].y) {
+                invasores[i].ativo = 0;
                 projeteis[i].ativo = 0;
                 pontuacao += 10;
             }
         }
     }
+    screenUpdate();
 }
 
 // Controle do jogador e dos projeteis
@@ -115,8 +127,8 @@ int controle() {
 
         // apaga posicao anterior do jogador
         if (tecla == ESQUERDA || tecla == DIREITA) {
-                screenGotoxy(jogador.x, jogador.y);
-                printf(" ");
+            screenGotoxy(jogador.x, jogador.y);
+            printf(" ");
 
             // Movimento do jogador
             if (tecla == ESQUERDA && jogador.x > 0) {
@@ -127,7 +139,7 @@ int controle() {
         }
         // Disparo do jogador
         if (tecla == TIRO) {
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < PROJETEIS; i++) {
                 if (!projeteis[i].ativo) {
                     projeteis[i].x = jogador.x;
                     projeteis[i].y = jogador.y - 1;
@@ -136,9 +148,9 @@ int controle() {
                 }
             }
             printf("\a");
-            screenUpdate();
         }
     }
+    screenUpdate();
     return tecla;
 }
 
@@ -148,7 +160,7 @@ void loop_jogo() {
 
     screenInit(1);   // inicializa a tela
     keyboardInit();  // inicializa o teclado
-    timerInit(50);   // inicializa o timer 
+    timerInit(DELAY);   // inicializa o timer 
 
     while(tecla != FIM) {
         if(timerTimeOver() == 1) { // delay para atualizacao do jogo
