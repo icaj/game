@@ -14,7 +14,7 @@
 #define INVASORES 19
 #define PROJETEIS 5
 
-// Estruturas para o jogador e os invasores
+// Estruturas para o jogador, projeteis e os invasores
 typedef struct {
     int x, y;
 } Jogador;
@@ -101,6 +101,8 @@ void atualizar() {
             projeteis[i].y -= 1;
             if (projeteis[i].y < 1) {
                 projeteis[i].ativo = 0;
+                screenGotoxy(projeteis[i].x, projeteis[i].y);
+                printf(" ");
             }
         }
     }
@@ -108,10 +110,14 @@ void atualizar() {
     // Verifica colisão dos projeteis com os invasores
     for (int i = 0; i < PROJETEIS; i++) {
         if (projeteis[i].ativo) {
-            if (invasores[i].x == projeteis[i].x && invasores[i].y == projeteis[i].y) {
-                invasores[i].ativo = 0;
-                projeteis[i].ativo = 0;
-                pontuacao += 10;
+            for(int z = 0; z < INVASORES; z++) {
+                if (invasores[z].x == projeteis[i].x && invasores[z].y == projeteis[i].y) {
+                    invasores[z].ativo = 0;
+                    projeteis[i].ativo = 0;
+                    pontuacao += 10;
+                    screenGotoxy(invasores[z].x, invasores[z].y);
+                    printf(" ");
+                }
             }
         }
     }
@@ -147,6 +153,7 @@ int controle() {
                     break;
                 }
             }
+            // soa um beep
             printf("\a");
         }
     }
