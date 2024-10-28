@@ -6,12 +6,13 @@
 #include <screen.h>
 #include <keyboard.h>
 
-#define LARGURA 40
-#define ALTURA 20
-#define ESQUERDA 109
-#define DIREITA 108
-#define FIM 70
-#define TIRO 32
+#define LARGURA 80
+#define ALTURA 24
+#define ESQUERDA 's' //109
+#define DIREITA 'l' //108
+#define FIM 'f'
+#define TIRO ' '
+#define INVASORES 19
 
 // Estruturas para o jogador e os invasores
 typedef struct {
@@ -26,18 +27,15 @@ typedef struct {
 // Variáveis globais
 Nave jogador;
 Projetil projeteis[5];
-int invasores[LARGURA];
+int invasores[INVASORES];
 int pontuacao = 0;
 
 // Inicializa o jogo
 void inicializar() {
-    screenInit(1);
-    keyboardInit();
-    timerInit(50);
 
     // Inicializa o jogador
-    jogador.x = LARGURA / 2;
-    jogador.y = ALTURA - 1;
+    jogador.x = MAXX / 2;
+    jogador.y = MAXY - 3;
 
     // Inicializa os projeteis
     for (int i = 0; i < 5; i++) {
@@ -45,7 +43,7 @@ void inicializar() {
     }
 
     // Inicializa os invasores
-    for (int i = 0; i < LARGURA; i++) {
+    for (int i = 0; i < INVASORES; i++) {
         invasores[i] = 1;
     }
 }
@@ -54,11 +52,10 @@ void inicializar() {
 void desenhar() {
 
     // Desenha os invasores
-    for (int i = 0; i < LARGURA; i++) {
+    for (int i = 0; i < INVASORES; i++) {
         if (invasores[i]) {
-            screenGotoxy(i+1, 1);
+            screenGotoxy((MAXX/INVASORES) + ((MAXX/INVASORES) * i), 4);
             printf("*");
-            screenUpdate();
         }
     }
 
@@ -67,19 +64,17 @@ void desenhar() {
         if (projeteis[i].ativo) {
             screenGotoxy(projeteis[i].x, projeteis[i].y);
             printf("|");
-            screenUpdate();
         }
     }
 
     // Desenha o jogador
     screenGotoxy(jogador.x, jogador.y);
     printf("A");
-    screenUpdate();
 
     // Desenha a pontuação
     screenGotoxy(MAXX-16, MAXY);
     printf("Pontuação: %3d", pontuacao);
-
+    
     screenUpdate();
 }
 
@@ -89,6 +84,9 @@ void atualizar() {
     // Movimenta os projeteis
     for (int i = 0; i < 5; i++) {
         if (projeteis[i].ativo) {
+            screenGotoxy(projeteis[i].x, projeteis[i].y-1);
+            printf(" ");
+            screenUpdate();
             projeteis[i].y -= 1;
             if (projeteis[i].y < 1) {
                 projeteis[i].ativo = 0;
@@ -110,17 +108,23 @@ void atualizar() {
 
 // Controle do jogador e dos projeteis
 int controle() {
+    int tecla = 0;
 
-    if(keyhit()) {
-       int tecla = readch();
+    if(keyhit()) { // verifica se usuario pressionou alguma tecla
+       tecla = readch(); // le tecla pressionada
 
-        // Movimento do jogador
-        if (tecla == ESQUERDA && jogador.x > 0) {
-            jogador.x -= 1;
-        } else if (tecla == DIREITA && jogador.x < LARGURA - 1) {
-            jogador.x += 1;
+        // apaga posicao anterior do jogador
+        if (tecla == ESQUERDA || tecla == DIREITA) {
+                screenGotoxy(jogador.x, jogador.y);
+                printf(" ");
+
+            // Movimento do jogador
+            if (tecla == ESQUERDA && jogador.x > 0) {
+                jogador.x -= 1;
+            } else if (tecla == DIREITA && jogador.x < MAXX - 1) {
+                jogador.x += 1;
+            }
         }
-
         // Disparo do jogador
         if (tecla == TIRO) {
             for (int i = 0; i < 5; i++) {
@@ -131,33 +135,38 @@ int controle() {
                     break;
                 }
             }
-        }
-        // fim do jogo
-        if (tecla == FIM) {
-            return 1;
+            printf("\a");
+            screenUpdate();
         }
     }
-    return 0;
+    return tecla;
 }
 
 // Loop principal do jogo
 void loop_jogo() {
+    int tecla = 0;
 
-    while (!controle()) {
-        desenhar();
-        atualizar();
-        
+    screenInit(1);   // inicializa a tela
+    keyboardInit();  // inicializa o teclado
+    timerInit(50);   // inicializa o timer 
+
+    while(tecla != FIM) {
+        if(timerTimeOver() == 1) { // delay para atualizacao do jogo
+            desenhar();   // desenha a tela do jogo
+            atualizar();  // atualiza a posicao dos objetos na tela
+            tecla = controle();  // verifica tecla pessionada e atualiza variaveis
+        }
     }
+
+    keyboardDestroy(); // finaliza teclado
+    screenDestroy();   // finaliza tela
+    timerDestroy();    // finaliza timer
 }
 
 int main() {
 
-    inicializar();
-    loop_jogo();
-
-    keyboardDestroy();
-    screenDestroy();
-    timerDestroy();
+    inicializar(); // inicializa variaveis
+    loop_jogo();   // loop principal do jogo
 
     return 0;
 }
