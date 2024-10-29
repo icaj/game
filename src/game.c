@@ -114,7 +114,7 @@ void desenhar() {
 void atualizar() {
     
     // Movimenta os invasores
-    if(contador==0) {
+    if(!contador) {
         for(int i = 0; i < INVASORES; i++) {
             if(invasores[i].ativo) {
                 screenGotoxy(invasores[i].x, invasores[i].y);
@@ -125,6 +125,7 @@ void atualizar() {
             }
         }
     }
+
     // Movimenta os projeteis
     for (int i = 0; i < PROJETEIS; i++) {
         if (projeteis[i].ativo) {
