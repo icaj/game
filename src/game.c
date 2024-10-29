@@ -14,7 +14,7 @@
 #define INVASORES 19
 #define PROJETEIS 5
 #define CHAR_INV  '*'
-#define TAXA_ATUALIZACAO_INVASORES 80
+#define TAXA_ATUALIZACAO_INVASORES 60
 
 // Estruturas para o jogador, projeteis e os invasores
 typedef struct {
@@ -102,6 +102,10 @@ void desenhar() {
     // Desenha a pontuação
     screenGotoxy(MAXX-16, MAXY);
     printf("Pontuação: %3d", pontuacao);
+
+    // exibe ajuda
+    screenGotoxy(3, MAXY);
+    printf("Direita: A - Esquerda: D - Tiro: espaço");
     
     screenUpdate();
 }
