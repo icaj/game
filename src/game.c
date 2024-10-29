@@ -6,13 +6,15 @@
 #include <screen.h>
 #include <keyboard.h>
 
-#define DELAY 60
+#define DELAY 50
 #define ESQUERDA 'a' 
 #define DIREITA 'd' 
 #define FIM 'f'
 #define TIRO ' '
 #define INVASORES 19
 #define PROJETEIS 5
+#define CHAR_INV  '*'
+#define TAXA_ATUALIZACAO_INVASORES 80
 
 // Estruturas para o jogador, projeteis e os invasores
 typedef struct {
@@ -34,6 +36,8 @@ Jogador jogador;
 Projetil projeteis[PROJETEIS];
 Nave invasores[INVASORES];
 int pontuacao = 0;
+int contador = TAXA_ATUALIZACAO_INVASORES;
+int fim = 0;
 
 // Inicializa o jogo
 void inicializar() {
@@ -53,8 +57,16 @@ void inicializar() {
         invasores[i].x = (MAXX/INVASORES) + ((MAXX/INVASORES) * i);
         invasores[i].y = 4;
         screenGotoxy(invasores[i].x, invasores[i].y);
-        printf("*");
+        printf("%c", CHAR_INV);
     }
+}
+
+void gameOver() {
+    fim = 1;
+}
+
+int isGameOver() {
+    return fim;
 }
 
 // Desenha o jogo na tela
@@ -62,9 +74,9 @@ void desenhar() {
 
     // Desenha os invasores
     for (int i = 0; i < INVASORES; i++) {
-        screenGotoxy((MAXX/INVASORES) + ((MAXX/INVASORES) * i), 4);
+        screenGotoxy(invasores[i].x, invasores[i].y);
         if(invasores[i].ativo)
-            printf("*");
+            printf("%c", CHAR_INV);
         else
             printf(" ");
     }
@@ -76,8 +88,10 @@ void desenhar() {
                 screenGotoxy(projeteis[i].x, projeteis[i].y+1);
                 printf(" ");
             }
-            screenGotoxy(projeteis[i].x, projeteis[i].y);
-            printf("|");
+            if(projeteis[i].y > 1) {
+                screenGotoxy(projeteis[i].x, projeteis[i].y);
+                printf("|");
+            }
         }
     }
 
@@ -95,14 +109,24 @@ void desenhar() {
 // Lógica do jogo
 void atualizar() {
     
+    // Movimenta os invasores
+    if(contador==0) {
+        for(int i = 0; i < INVASORES; i++) {
+            if(invasores[i].ativo) {
+                screenGotoxy(invasores[i].x, invasores[i].y);
+                printf(" ");
+                invasores[i].y += 1;
+                if(invasores[i].y >= jogador.y)
+                    gameOver();
+            }
+        }
+    }
     // Movimenta os projeteis
     for (int i = 0; i < PROJETEIS; i++) {
         if (projeteis[i].ativo) {
             projeteis[i].y -= 1;
             if (projeteis[i].y < 1) {
                 projeteis[i].ativo = 0;
-                screenGotoxy(projeteis[i].x, projeteis[i].y);
-                printf(" ");
             }
         }
     }
@@ -116,6 +140,8 @@ void atualizar() {
                     projeteis[i].ativo = 0;
                     pontuacao += 10;
                     screenGotoxy(invasores[z].x, invasores[z].y);
+                    printf(" ");
+                    screenGotoxy(invasores[z].x, invasores[z].y+1);
                     printf(" ");
                 }
             }
@@ -170,10 +196,16 @@ void loop_jogo() {
     timerInit(DELAY);   // inicializa o timer 
 
     while(tecla != FIM) {
+
+        if(isGameOver())
+            break;
+
         if(timerTimeOver() == 1) { // delay para atualizacao do jogo
             desenhar();   // desenha a tela do jogo
             atualizar();  // atualiza a posicao dos objetos na tela
             tecla = controle();  // verifica tecla pessionada e atualiza variaveis
+            contador--;
+            if(contador < 0) contador = TAXA_ATUALIZACAO_INVASORES;
         }
     }
 
