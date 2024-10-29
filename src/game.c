@@ -37,7 +37,7 @@ Projetil projeteis[PROJETEIS];
 Nave invasores[INVASORES];
 int pontuacao = 0;
 int contador = TAXA_ATUALIZACAO_INVASORES;
-int fim = 0;
+int fimJogo = 0;
 
 // Inicializa o jogo
 void inicializar() {
@@ -62,11 +62,22 @@ void inicializar() {
 }
 
 void gameOver() {
-    fim = 1;
+    int i = 100/DELAY;
+    char szMens[] = "G A M E  O V E R";
+    fimJogo = 1;
+
+    screenClear();
+    screenGotoxy((MAXX-strlen(szMens))/2, MAXY/2);
+    screenSetBlink();
+    printf("%s", szMens);
+    screenUpdate();
+    while(i) {
+        if(timerTimeOver() == 1) i--;
+    }
 }
 
 int isGameOver() {
-    return fim;
+    return fimJogo;
 }
 
 // Desenha o jogo na tela
