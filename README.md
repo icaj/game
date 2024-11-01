@@ -1,6 +1,6 @@
 Implementação do famoso Space Invaders usando a linguagem C.
 
-Equipe:<br>
+<b>Equipe:</b><br>
 Fernando Cyreno<br>
 Ivo Caetano<br>
 Marcelo Fernandes<br>
