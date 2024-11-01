@@ -6,7 +6,7 @@
 #include <screen.h>
 #include <keyboard.h>
 
-#define DELAY 50
+#define DELAY 40
 #define ESQUERDA 'a' 
 #define DIREITA 'd' 
 #define FIM 'f'
@@ -19,23 +19,19 @@
 // Estruturas para o jogador, projeteis e os invasores
 typedef struct {
     int x, y;
+    char nome[9];
+    int pontuacao;
 } Jogador;
 
 typedef struct {
     int x, y;
     int ativo;
-} Projetil;
-
-typedef struct {
-    int x, y;
-    int ativo;
-} Nave;
+} Objeto;
 
 // Variáveis globais
 Jogador jogador;
-Projetil projeteis[PROJETEIS];
-Nave invasores[INVASORES];
-int pontuacao = 0;
+Objeto projeteis[PROJETEIS];
+Objeto invasores[INVASORES];
 int contador = TAXA_ATUALIZACAO_INVASORES;
 int fimJogo = 0;
 
@@ -45,6 +41,8 @@ void inicializar() {
     // Inicializa o jogador
     jogador.x = MAXX / 2;
     jogador.y = MAXY - 3;
+    jogador.pontuacao = 0;
+    strcpy(jogador.nome, "CesarADS");
 
     // Inicializa os projeteis
     for (int i = 0; i < 5; i++) {
@@ -61,23 +59,32 @@ void inicializar() {
     }
 }
 
-void gameOver() {
-    int i = 100/DELAY;
-    char szMens[] = "G A M E  O V E R";
-    fimJogo = 1;
+int isGameOver() {
+    return fimJogo;
+}
 
+void setGameOver(int fim) {
+    fimJogo = fim;
+}
+
+void gameOver(char *nome, int pontuacao) {
+    int cont = 300/DELAY;    // tempo para mostrar a tela game over
+    char szMens[] = "G A M E  O V E R";
+
+    setGameOver(1);   // seta variavel de fim de jogo
+
+    // exibe a tela game over
     screenClear();
     screenGotoxy((MAXX-strlen(szMens))/2, MAXY/2);
     screenSetBlink();
+    screenSetColor(RED, BLACK);
     printf("%s", szMens);
     screenUpdate();
-    while(i) {
-        if(timerTimeOver() == 1) i--;
-    }
-}
 
-int isGameOver() {
-    return fimJogo;
+    // delay para mostrar a tela game over
+    while(cont) {
+        if(timerTimeOver() == 1) cont--;
+    }
 }
 
 // Desenha o jogo na tela
@@ -111,8 +118,8 @@ void desenhar() {
     printf("A");
 
     // Desenha a pontuação
-    screenGotoxy(MAXX-16, MAXY);
-    printf("Pontuação: %3d", pontuacao);
+    screenGotoxy(MAXX-25, MAXY);
+    printf("%s Pontos: %6d", jogador.nome, jogador.pontuacao);
 
     // exibe ajuda
     screenGotoxy(3, MAXY);
@@ -132,7 +139,7 @@ void atualizar() {
                 printf(" ");
                 invasores[i].y += 1;
                 if(invasores[i].y >= jogador.y)
-                    gameOver();
+                    gameOver(jogador.nome, jogador.pontuacao);
             }
         }
     }
@@ -154,7 +161,7 @@ void atualizar() {
                 if (invasores[z].x == projeteis[i].x && invasores[z].y == projeteis[i].y) {
                     invasores[z].ativo = 0;
                     projeteis[i].ativo = 0;
-                    pontuacao += 10;
+                    jogador.pontuacao += 10;
                     screenGotoxy(invasores[z].x, invasores[z].y);
                     printf(" ");
                     screenGotoxy(invasores[z].x, invasores[z].y+1);
@@ -179,9 +186,9 @@ int controle() {
             printf(" ");
 
             // Movimento do jogador
-            if (tecla == ESQUERDA && jogador.x > 0) {
+            if (tecla == ESQUERDA && jogador.x > 2) {
                 jogador.x -= 1;
-            } else if (tecla == DIREITA && jogador.x < MAXX - 1) {
+            } else if (tecla == DIREITA && jogador.x < MAXX - 2) {
                 jogador.x += 1;
             }
         }
