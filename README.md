@@ -6,6 +6,8 @@ Implementação do famoso Space Invaders usando a linguagem C.
 Fernando Cyreno<br>
 Ivo Caetano<br>
 Marcello Fernandes<br>
+<br>
+![Printscreen da tela do jogo](https://github.com/icaj/game/game.jpg)<br>
 
 Este jogo Space Invaders, implementado em C, recria a mecânica clássica do arcade em um ambiente de terminal em modo texto (80 colunas por 25 linhas). No jogo, o jogador controla uma nave localizada na parte inferior central da tela e enfrenta ondas de invasores que se movem de cima para baixo na tela, descendo gradualmente depois de alguns segundos. O objetivo é eliminar todos os invasores antes que eles cheguem à nave, movendo-se lateralmente e atirando contra eles. A pontuação do jogador aumenta com cada acerto bem-sucedido.
 
