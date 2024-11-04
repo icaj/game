@@ -13,3 +13,4 @@ Na implementação, foram usadas funções da biblioteca <b>cli-lib</b> para con
 
 O jogo possui 8 fases, cada fase o jogador vai ter que enfrentar cada vez mais invasores que ele tem que destruir com projeteis que podem ser disparados através da tecla de espaços. Cada invasor destruido aumentará em 10 pontos sua pontuação. Quanto maior a pontuação obtida, mais possibilidade do jogador aparecer na lista das 10 maiores pontuaçõs que serão registradas pelo jogo.
 
+
