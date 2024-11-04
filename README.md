@@ -11,3 +11,5 @@ Este jogo Space Invaders, implementado em C, recria a mecânica clássica do arc
 
 Na implementação, foram usadas funções da biblioteca <b>cli-lib</b> para controlar a tela, gerenciar entradas de teclado e configurar o cronômetro do jogo, criando uma experiência responsiva e interativa em modo texto. As operações de tela atualizam a posição dos invasores, nave e tiros, enquanto o teclado permite mover a nave e atirar. O sistema de temporizador controla a movimentação dos invasores e gera o avanço deles, criando a pressão típica do jogo original.
 
+O jogo possui 8 fases, cada fase o jogador vai ter que enfrentar cada vez mais invasores que ele tem que destruir com projeteis que podem ser disparados através da tecla de espaços. Cada invasor destruido aumentará em 10 pontos sua pontuação. Quanto maior a pontuação obtida, mais possibilidade do jogador aparecer na lista das 10 maiores pontuaçõs que serão registradas pelo jogo.
+
