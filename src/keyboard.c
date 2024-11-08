@@ -26,6 +26,30 @@ void keyboardInit()
     tcsetattr(0, TCSANOW, &newSettings);
 }
 
+void keyboardEcho()
+{
+    tcgetattr(0,&newSettings);
+    newSettings = initialSettings;
+    newSettings.c_lflag &= ~ICANON;
+    newSettings.c_lflag &= ECHO;
+    newSettings.c_lflag &= ~ISIG;
+    newSettings.c_cc[VMIN] = 1;
+    newSettings.c_cc[VTIME] = 0;
+    tcsetattr(0, TCSANOW, &newSettings);
+}
+
+void keyboardNoEcho()
+{
+    tcgetattr(0,&newSettings);
+    newSettings = initialSettings;
+    newSettings.c_lflag &= ~ICANON;
+    newSettings.c_lflag &= ~ECHO;
+    newSettings.c_lflag &= ~ISIG;
+    newSettings.c_cc[VMIN] = 1;
+    newSettings.c_cc[VTIME] = 0;
+    tcsetattr(0, TCSANOW, &newSettings);
+}
+
 void keyboardDestroy()
 {
     tcsetattr(0, TCSANOW, &initialSettings);

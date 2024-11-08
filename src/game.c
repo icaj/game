@@ -5,47 +5,12 @@
 #include <timer.h>
 #include <screen.h>
 #include <keyboard.h>
-
-#define DELAY 40
-#define ESQUERDA 'a' 
-#define DIREITA 'd' 
-#define FIM 'f'
-#define TIRO ' '
-#define INVASORES_POR_NIVEL 19
-#define PROJETEIS 5
-#define CHAR_INV  '*'
-#define TAXA_ATUALIZACAO_INVASORES 80
-#define GAMEOVER -1
-#define PROXIMONIVEL 1
-
-// Estruturas para o jogador, projeteis e os invasores
-typedef struct {
-    int x, y;
-    char nome[9];
-    int pontuacao;
-} Jogador;
-
-typedef struct {
-    int x, y;
-    int ativo;
-} Projetil;
-
-typedef struct {
-    int x, y;
-    int ativo;
-} Invasor;
-
-typedef struct {
-    int nivel;
-    Invasor *pInv;
-    int qtdeInvasores;
-    Jogador jogador;
-    Projetil projeteis[PROJETEIS];
-} Jogo;
+#include <util.h>
+#include <score.h>
+#include <game.h>
 
 // Variáveis globais
 Jogo jogo;
-int contador = TAXA_ATUALIZACAO_INVASORES;
 
 // Inicializa o jogo
 void inicializar(int nivel) {
@@ -56,6 +21,7 @@ void inicializar(int nivel) {
     // iniciaiza o jogo
     jogo.nivel = nivel;
     jogo.qtdeInvasores = jogo.nivel * INVASORES_POR_NIVEL;
+    jogo.contador = TAXA_ATUALIZACAO_INVASORES;
 
     // aloca em memória invasores necessarios para o jogo
     if(jogo.pInv == NULL) {
@@ -68,7 +34,6 @@ void inicializar(int nivel) {
     jogo.jogador.x = MAXX / 2;
     jogo.jogador.y = MAXY - 3;
     jogo.jogador.pontuacao = 0;
-    strcpy(jogo.jogador.nome, "CesarADS");  // nome teste do jogador (depois alterar para o nome fornecido pelo usuario)
 
     // Inicializa os projeteis
     for (int i = 0; i < PROJETEIS; i++) {
@@ -85,7 +50,7 @@ void inicializar(int nivel) {
             jogo.pInv[i*INVASORES_POR_NIVEL + z].x = coluna;
             jogo.pInv[i*INVASORES_POR_NIVEL + z].y = linha;
             screenGotoxy(jogo.pInv[i].x, jogo.pInv[i].y);
-            printf("%c", CHAR_INV);
+            printf("%s", CHAR_INV);
             coluna += ((MAXX-2)/INVASORES_POR_NIVEL);
         }
         linha += 2;
@@ -103,6 +68,9 @@ void exibeTela(char szMensagem[], int tempo) {
     screenSetColor(RED, DARKGRAY);
     printf("%s", szMensagem);
     screenSetNormal();
+
+    exibeMaioresPontuadores();
+
     screenUpdate();
 
     // delay para mostrar a tela game over
@@ -116,24 +84,30 @@ void proximoNivel() {
 }
 
 // tela Game Over
-void gameOver(char *nome, int pontuacao) {
+void gameOver(char nome[], int pontuacao) {
+    JogadorPonto jogador[1];
+    strcpy(jogador[0].nome, nome);
+    jogador[0].ponto = pontuacao;
+
+    salvarJogador(jogador[0]);
+
     exibeTela("G A M E  O V E R", 2500);
 }
 
 // zerou o jogo
 void zerouJogo() {
-    exibeTela("V O Ç E  Z E R O U  O  J O G O !!!!   PARABÉNS !", 4500);
+    exibeTela("V O C Ê  Z E R O U  O  J O G O !!!!   PARABÉNS !", 4500);
 }
 
 // Desenha o jogo na tela
 void desenhar() {
 
     // Desenha os invasores
-    screenSetColor(LIGHTRED, DARKGRAY);
+    screenSetColor(LIGHTMAGENTA, DARKGRAY);
     for (int i = 0; i < jogo.qtdeInvasores; i++) {
         screenGotoxy(jogo.pInv[i].x, jogo.pInv[i].y);
         if(jogo.pInv[i].ativo)
-            printf("%c", CHAR_INV);
+            printf("%s", CHAR_INV);
         else
             printf(" ");
     }
@@ -161,11 +135,15 @@ void desenhar() {
 
     // Desenha o jogador
     screenGotoxy(jogo.jogador.x, jogo.jogador.y);
+    screenSetColor(CYAN, DARKGRAY);
     printf("A");
+    screenSetNormal();
 
     // Desenha a pontuação
     screenGotoxy(MAXX-25, 0);
+    screenSetColor(YELLOW, DARKGRAY);
     printf("%s Pontos: %6d", jogo.jogador.nome, jogo.jogador.pontuacao);
+    screenSetNormal();
 
     // exibe ajuda
     screenGotoxy(3, MAXY);
@@ -178,7 +156,7 @@ void desenhar() {
 int atualizar() {
     int invasoresAtivos = 0;
     // Movimenta os invasores
-    if(!contador) {
+    if(!jogo.contador) {
         for(int i = 0; i < jogo.qtdeInvasores; i++) {
             if(jogo.pInv[i].ativo) {
                 screenGotoxy(jogo.pInv[i].x, jogo.pInv[i].y);
@@ -265,10 +243,11 @@ int controle() {
 
 // Loop principal do jogo
 void loop_jogo() {
+    // tecla pressionada pelo jogador
     int tecla = 0;
+    // status atual do jogo (GAMEOVER ou PROXIMONIVEL)
     int status = 0;
 
-    //screenInit(1);    // inicializa a tela
     keyboardInit();   // inicializa o teclado
     timerInit(DELAY); // inicializa o timer 
 
@@ -288,8 +267,8 @@ void loop_jogo() {
                 inicializar(jogo.nivel+1);
             }
             tecla = controle();  // verifica tecla pessionada e atualiza variaveis
-            contador--;
-            if(contador < 0) contador = TAXA_ATUALIZACAO_INVASORES;
+            jogo.contador--;
+            if(jogo.contador < 0) jogo.contador = TAXA_ATUALIZACAO_INVASORES;
         }
     }
 
@@ -299,9 +278,23 @@ void loop_jogo() {
 }
 
 int main() {
+    char szNomeJogador[9] = "\0";
 
-    inicializar(1); // inicializa variaveis definindo o nivel inicial 
-    loop_jogo();   // loop principal do jogo
+    // exibe tela inicial
+    telaInicial();
+
+    // exibe lista dos maiores jogadores
+    exibeMaioresPontuadores();
+
+    // solicta o nome do jodador
+    getNomeJogador(szNomeJogador);
+    strcpy(jogo.jogador.nome, szNomeJogador);
+
+    // inicializa variaveis definindo o nivel inicial 
+    inicializar(1);
+
+    // loop principal do jogo
+    loop_jogo();
 
     return 0;
 }

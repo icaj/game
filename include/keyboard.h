@@ -10,6 +10,10 @@
 
 void keyboardInit();
 
+void keyboardEcho();
+
+void keyboardNoEcho();
+
 void keyboardDestroy();
     
 int keyhit();

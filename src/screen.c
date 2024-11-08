@@ -50,6 +50,8 @@ void screenDrawBorders()
 
 void screenInit(int drawBorders)
 {
+    screenSetScreenDim();
+    screenUpdate();
     screenClear();
     if (drawBorders) screenDrawBorders();
     screenHomeCursor();

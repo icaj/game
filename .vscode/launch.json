@@ -9,7 +9,7 @@
       "stopAtEntry": false,
       "externalConsole": false,
       "cwd": "/home/ivo/Documentos/github/game/src",
-      "program": "/home/ivo/Documentos/github/game/output/${fileBasenameNoExtension}",
+      "program": "/home/ivo/Documentos/github/game/build/${fileBasenameNoExtension}",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
