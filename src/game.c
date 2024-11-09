@@ -255,18 +255,23 @@ void loop_jogo() {
         if(timerTimeOver() == 1) { // delay para atualizacao do jogo
             desenhar();            // desenha a tela do jogo
             status = atualizar();  // atualiza a posicao dos objetos na tela
+            // verifica se é fim de jogo
             if (status == GAMEOVER) {
                 gameOver(jogo.jogador.nome, jogo.jogador.pontuacao);
                 break;
+            // verifica se vai pro próximo nivel
             } else if (status == PROXIMONIVEL) {
+                // verifica se chegou no nivel máximo
                 if(jogo.nivel == 8) {
                     zerouJogo();
                     break;
                 }
+                // vai para o proximo nivel
                 proximoNivel();
                 inicializar(jogo.nivel+1);
             }
             tecla = controle();  // verifica tecla pessionada e atualiza variaveis
+            // atualiza timer
             jogo.contador--;
             if(jogo.contador < 0) jogo.contador = TAXA_ATUALIZACAO_INVASORES;
         }
@@ -295,6 +300,9 @@ int main() {
 
     // loop principal do jogo
     loop_jogo();
+
+    // libera memoria
+    free(jogo.pInv);
 
     return 0;
 }
