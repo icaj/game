@@ -15,4 +15,15 @@ Na implementação, foram usadas funções da biblioteca <b>cli-lib</b> para con
 
 O jogo possui 8 fases, cada fase o jogador vai ter que enfrentar cada vez mais invasores que ele tem que destruir com projeteis que podem ser disparados através da tecla de espaços. Cada invasor destruido aumentará em 10 pontos sua pontuação. Quanto maior a pontuação obtida, mais possibilidade do jogador aparecer na lista das 10 maiores pontuaçõs que serão registradas pelo jogo.
 
+<b>Pontuação do Jogo</b><br>
+O jogo Space Invaders armazena o nome e a pontuação do jogador, inserindo essas informações no arquivo scores.txt. Este arquivo irá concentrar todos os jogadores e suas respectivas pontuações. Também foram implementadas funções para retornar os top 5 jogadores com maior pontuação registrados no arquivo scores.txt. Foi adotada uma arquitetura modular para o processo de armazenamento e leitura da pontuação. O arquivo score.h contém a declração das funções e as definições do tipo utilizadas no processo, enquanto o arquivo score.c contém o código fonte real das funções.
+
+O programa possui os seguintes fontes:
+
+src-\ <br>
+    |-game.c  : programa principal do jogo com a logica de funcionamento e controles principais <br>
+    |-score.c : funções para salvar e ler a lista de maiores pontuadores gravada no arquivo scores.txt <br>
+    |-util.c  : rotinas de apoio <br>
+    |-keyboard.c, screen.h, timer.h : biblioteca cli-lib para interface com teclado, display e temporizador <br>
+
 
