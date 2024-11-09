@@ -27,3 +27,16 @@ src-\ <br>
     |-keyboard.c, screen.h, timer.h : biblioteca cli-lib para interface com teclado, display e temporizador <br>
 
 
+<b>Compilação:</b><br>
+
+O jogo poderá ser compilado baixando o repositório para uma pasta no computador e nesta pasta digitando-se o comando:
+
+<b>make</b><br>
+
+Caso náo possua o comando make disponível, poderá digitar o comando:
+
+<b>gcc src/*.c -I include/ -o build/game</b><br>
+
+
+
+
