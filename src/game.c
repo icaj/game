@@ -80,7 +80,7 @@ void exibeTela(char szMensagem[], int tempo) {
 }
 
 void proximoNivel() {
-    exibeTela("P A R A B E N S  !!!", 3500);
+    exibeTela("P A R A B E N S  !!!", 4000);
 }
 
 // tela Game Over
@@ -91,12 +91,12 @@ void gameOver(char nome[], int pontuacao) {
 
     salvarJogador(jogador[0]);
 
-    exibeTela("G A M E  O V E R", 2500);
+    exibeTela("G A M E  O V E R", 4000);
 }
 
 // zerou o jogo
 void zerouJogo() {
-    exibeTela("V O C Ê  Z E R O U  O  J O G O !!!!   PARABÉNS !", 4500);
+    exibeTela("V O C Ê  Z E R O U  O  J O G O !!!!   PARABÉNS !", 5000);
 }
 
 // Desenha o jogo na tela

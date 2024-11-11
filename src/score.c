@@ -6,7 +6,7 @@ void salvarJogador(JogadorPonto jogador) {
     FILE *arquivo = fopen("scores.txt", "a");
     if (arquivo == NULL) {
         printf("Erro na abertura do arquivo!\n");
-        exit(1);
+        exit(-1);
     }
 
     fprintf(arquivo, "%s %d\n", jogador.nome, jogador.ponto);
@@ -25,7 +25,7 @@ int quantidadeJogadores() {
     FILE *arquivo = fopen("scores.txt", "r");
     if (arquivo == NULL) {
         printf("Erro na abertura do arquivo!\n");
-        exit(1);
+        exit(-1);
     }
 
     int contador = 0;
@@ -46,14 +46,14 @@ JogadorPonto *lerJogadores(int quantidade) {
     FILE *arquivo = fopen("scores.txt", "r");
     if (arquivo == NULL) {
         printf("Erro na abertura do arquivo!\n");
-        exit(1);
+        return NULL;
     }
 
     // Aloca memória para o vetor de jogadores com base na quantidade obtida
     JogadorPonto *jogadores = malloc(quantidade * sizeof(JogadorPonto));
     if (jogadores == NULL) {
         printf("Erro ao alocar memória!\n");
-        exit(1);
+        return NULL;
     }
 
     int i = 0;
@@ -79,7 +79,7 @@ JogadorPonto *lerJogadores(int quantidade) {
     if (topJogadores == NULL) {
         printf("Erro ao alocar memória para topJogadores!\n");
         free(jogadores);  // Libera a memória do vetor original
-        exit(1);
+        return NULL;
     }
 
     // Copia os top jogadores para o novo vetor
