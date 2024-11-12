@@ -50,8 +50,8 @@
 
 #define MINX           1      // min screen horizontal pos
 #define MINY           1      // min screen vertical pos
-#define MAXX           80     // max screen horizontal pos
-#define MAXY           24     // max screen vertical pos
+#define MAXX           100     // max screen horizontal pos
+#define MAXY           30     // max screen vertical pos
 
 /**
  * Screen Colors type
@@ -61,6 +61,12 @@ typedef enum {BLACK, RED, GREEN, BROWN, BLUE, MAGENTA, CYAN, LIGHTGRAY,
         LIGHTMAGENTA, LIGHTCYAN, WHITE} screenColor; 
 
 
+
+static inline void screeSetScreenDim() {
+
+    // Comando ANSI para redimensionar o terminal
+    printf("\033[8;%d;%dt", MAXY, MAXX);
+}
 
 /**
  * Move the cursor to position (0,0)

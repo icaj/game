@@ -12,6 +12,11 @@
 static struct timeval timer, now;
 static int delay = -1;
 
+typedef struct {
+    int x;
+    
+} Tipo;
+
 void timerInit(int valueMilliSec)
 {
     delay = valueMilliSec;

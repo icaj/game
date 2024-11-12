@@ -13,7 +13,7 @@
 #define TIRO ' '
 #define INVASORES_POR_NIVEL 19
 #define PROJETEIS 5
-#define CHAR_INV  '*'
+#define CHAR_INV  ' '
 #define TAXA_ATUALIZACAO_INVASORES 80
 #define GAMEOVER -1
 #define PROXIMONIVEL 1
@@ -49,6 +49,8 @@ int contador = TAXA_ATUALIZACAO_INVASORES;
 
 // Inicializa o jogo
 void inicializar(int nivel) {
+
+    screeSetScreenDim();
 
     // limpa tela
     screenInit(1);
@@ -129,7 +131,8 @@ void zerouJogo() {
 void desenhar() {
 
     // Desenha os invasores
-    screenSetColor(LIGHTRED, DARKGRAY);
+    screenSetColor(DARKGRAY, LIGHTGRAY);
+    screenSetBold();
     for (int i = 0; i < jogo.qtdeInvasores; i++) {
         screenGotoxy(jogo.pInv[i].x, jogo.pInv[i].y);
         if(jogo.pInv[i].ativo)
@@ -161,7 +164,9 @@ void desenhar() {
 
     // Desenha o jogador
     screenGotoxy(jogo.jogador.x, jogo.jogador.y);
+    screenSetColor(LIGHTBLUE, DARKGRAY);
     printf("A");
+    screenSetNormal();
 
     // Desenha a pontuação
     screenGotoxy(MAXX-25, 0);
