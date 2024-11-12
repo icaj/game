@@ -33,7 +33,8 @@ void inicializar(int nivel) {
     // Inicializa o jogador
     jogo.jogador.x = MAXX / 2;
     jogo.jogador.y = MAXY - 3;
-    jogo.jogador.pontuacao = 0;
+    if(jogo.nivel == 1)
+        jogo.jogador.pontuacao = 0;
 
     // Inicializa os projeteis
     for (int i = 0; i < PROJETEIS; i++) {
@@ -58,20 +59,9 @@ void inicializar(int nivel) {
     }
 }
 
-void exibeTela(char szMensagem[], int tempo) {
-    int cont = tempo/DELAY;    // tempo para mostrar a tela 
-
-    // exibe a tela de parabens
-    screenClear();
-    screenGotoxy((MAXX-strlen(szMensagem))/2, MAXY/2);
-    screenSetBlink();
-    screenSetColor(RED, DARKGRAY);
-    printf("%s", szMensagem);
-    screenSetNormal();
-
-    exibeMaioresPontuadores();
-
-    screenUpdate();
+// aguarda x milessegundos
+void sleep(int milissegundos) {
+    int cont = milissegundos/DELAY;    // tempo para mostrar a tela 
 
     // delay para mostrar a tela game over
     while(cont) {
@@ -79,8 +69,20 @@ void exibeTela(char szMensagem[], int tempo) {
     }
 }
 
+void exibeTela(char szMensagem[]) {
+    // exibe a tela de parabens
+    screenClear();
+    screenGotoxy((MAXX-strlen(szMensagem))/2, MAXY/2);
+    screenSetBlink();
+    screenSetColor(RED, DARKGRAY);
+    printf("%s", szMensagem);
+    screenSetNormal();
+    screenUpdate();
+}
+
 void proximoNivel() {
-    exibeTela("P A R A B E N S  !!!", 4000);
+    exibeTela("P A R A B E N S  !!!");
+    sleep(4000);
 }
 
 // tela Game Over
@@ -91,12 +93,15 @@ void gameOver(char nome[], int pontuacao) {
 
     salvarJogador(jogador[0]);
 
-    exibeTela("G A M E  O V E R", 4000);
+    exibeTela("G A M E  O V E R");
+    exibeMaioresPontuadores();
+    sleep(4000);
 }
 
 // zerou o jogo
 void zerouJogo() {
-    exibeTela("V O C Ê  Z E R O U  O  J O G O !!!!   PARABÉNS !", 5000);
+    exibeTela("V O C Ê  Z E R O U  O  J O G O !!!!   PARABÉNS !");
+    sleep(5000);
 }
 
 // Desenha o jogo na tela

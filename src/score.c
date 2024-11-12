@@ -6,7 +6,6 @@ void salvarJogador(JogadorPonto jogador) {
     FILE *arquivo = fopen("scores.txt", "a");
     if (arquivo == NULL) {
         printf("Erro na abertura do arquivo!\n");
-        exit(-1);
     }
 
     fprintf(arquivo, "%s %d\n", jogador.nome, jogador.ponto);
