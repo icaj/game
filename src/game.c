@@ -312,7 +312,7 @@ int main() {
     strcpy(jogo.jogador.nome, szNomeJogador);
 
     // inicializa variaveis definindo o nivel inicial 
-    inicializar(7);
+    inicializar(1);
 
     // loop principal do jogo
     loop_jogo();
