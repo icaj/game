@@ -11,11 +11,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <game.h>
 
 void telaInicial();
 
 void lerNomeJogador(char *nomeJogador);
 
 void exibeMaioresPontuadores();
+
+void efeitoInvasores(Jogo *p, int qtdeInvaores);
 
 #endif /* __UTIL_H__ */

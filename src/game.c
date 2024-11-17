@@ -47,9 +47,9 @@ void inicializar(int nivel) {
     int linhasInvasores = jogo.qtdeInvasores / INVASORES_POR_NIVEL;
     for (int i = 0; i < linhasInvasores; i++) {
         for(int z = 0;z < INVASORES_POR_NIVEL; z++) {
-            jogo.pInv[i*INVASORES_POR_NIVEL + z].ativo = 1;
-            jogo.pInv[i*INVASORES_POR_NIVEL + z].x = coluna;
-            jogo.pInv[i*INVASORES_POR_NIVEL + z].y = linha;
+            jogo.pInv[(i * INVASORES_POR_NIVEL) + z].ativo = 1;
+            jogo.pInv[(i * INVASORES_POR_NIVEL) + z].x = coluna;
+            jogo.pInv[(i * INVASORES_POR_NIVEL) + z].y = linha;
             screenGotoxy(jogo.pInv[i].x, jogo.pInv[i].y);
             printf("%s", CHAR_INV);
             coluna += ((MAXX-2)/INVASORES_POR_NIVEL);
@@ -57,6 +57,7 @@ void inicializar(int nivel) {
         linha += 2;
         coluna = ((MAXX - 2) / INVASORES_POR_NIVEL);
     }
+    efeitoInvasores(&jogo, jogo.qtdeInvasores);
 }
 
 // aguarda x milessegundos
@@ -311,7 +312,7 @@ int main() {
     strcpy(jogo.jogador.nome, szNomeJogador);
 
     // inicializa variaveis definindo o nivel inicial 
-    inicializar(1);
+    inicializar(7);
 
     // loop principal do jogo
     loop_jogo();

@@ -60,7 +60,9 @@ typedef enum {BLACK, RED, GREEN, BROWN, BLUE, MAGENTA, CYAN, LIGHTGRAY,
         DARKGRAY, LIGHTRED, LIGHTGREEN, YELLOW, LIGHTBLUE, 
         LIGHTMAGENTA, LIGHTCYAN, WHITE} screenColor; 
 
-
+/**
+ * modify screen dimension based on MAXX and MAXY constants
+*/
 static inline void screenSetScreenDim() {
     // comando ANSI para redimensionar terminal
     printf("%s[8;%d;%dt", ESC, MAXY, MAXX);
