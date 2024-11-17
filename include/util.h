@@ -1,3 +1,10 @@
+/**
+ * util.h
+ * Created on Nov, 18th 2024
+ * Author: Fernando Cyreno, Marcello Fernandes e Ivo Caetano
+ * Based on Imperative and Functional Programming from CEZAR School"
+*/
+
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
@@ -7,7 +14,7 @@
 
 void telaInicial();
 
-void getNomeJogador(char *nomeJogador);
+void lerNomeJogador(char *nomeJogador);
 
 void exibeMaioresPontuadores();
 

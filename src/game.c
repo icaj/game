@@ -136,7 +136,9 @@ void desenhar() {
 
     // Desenha cabeçalho
     screenGotoxy(3, 0);
+    screenSetColor(LIGHTCYAN, DARKGRAY);
     printf("Nível %d", jogo.nivel);
+    screenSetNormal();
 
     // Desenha o jogador
     screenGotoxy(jogo.jogador.x, jogo.jogador.y);
@@ -166,12 +168,20 @@ int atualizar() {
             if(jogo.pInv[i].ativo) {
                 screenGotoxy(jogo.pInv[i].x, jogo.pInv[i].y);
                 printf(" ");
+                // incrementa corrodenada y
                 jogo.pInv[i].y += 1;
+                // incrementa corrdenada x
+                if(jogo.pInv[i].y % 2) { jogo.pInv[i].x += 1;}
+                else jogo.pInv[i].x -= 1;
+
                 invasoresAtivos++;
+
+                // se corrdenada y do invasor é igual a coordenada x do invasor, fim de jogo
                 if(jogo.pInv[i].y >= jogo.jogador.y)
                     return GAMEOVER;
             }
         }
+        // se qtde de invasores ativos eh igual a zero, proximo nivel
         if (invasoresAtivos == 0) {
             return PROXIMONIVEL;
         }
@@ -297,7 +307,7 @@ int main() {
     exibeMaioresPontuadores();
 
     // solicta o nome do jodador
-    getNomeJogador(szNomeJogador);
+    lerNomeJogador(szNomeJogador);
     strcpy(jogo.jogador.nome, szNomeJogador);
 
     // inicializa variaveis definindo o nivel inicial 

@@ -1,3 +1,10 @@
+/**
+ * game.h
+ * Created on Nov, 18th 2024
+ * Author: Fernando Cyreno, Marcello Fernandes e Ivo Caetano
+ * Based on Imperative and Functional Programming from CEZAR School"
+*/
+
 #ifndef __GAME_H__
 #define __GAME_H__
 

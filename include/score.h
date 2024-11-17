@@ -1,3 +1,10 @@
+/**
+ * score.h
+ * Created on Nov, 18th 2024
+ * Author: Fernando Cyreno, Marcello Fernandes e Ivo Caetano
+ * Based on Imperative and Functional Programming from CEZAR School"
+*/
+
 #ifndef __SCORE_H__
 #define __SCORE_H__
 

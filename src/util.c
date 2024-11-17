@@ -114,7 +114,7 @@ void exibeMaioresPontuadores() {
 }
 
 // solicita o nome do jogador atual
-void getNomeJogador(char *nomeJogador) {
+void lerNomeJogador(char *nomeJogador) {
     // posiciona o cursor na tela
     screenGotoxy(MAXX/2 - 7, MAXY/2 + 12);
 
