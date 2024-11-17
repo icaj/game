@@ -26,27 +26,17 @@ void keyboardInit()
     tcsetattr(0, TCSANOW, &newSettings);
 }
 
+// permite echoar na tela o caracter digitado
 void keyboardEcho()
 {
-    tcgetattr(0,&newSettings);
-    newSettings = initialSettings;
-    newSettings.c_lflag &= ~ICANON;
-    newSettings.c_lflag &= ECHO;
-    newSettings.c_lflag &= ~ISIG;
-    newSettings.c_cc[VMIN] = 1;
-    newSettings.c_cc[VTIME] = 0;
+    newSettings.c_lflag |= ECHO;
     tcsetattr(0, TCSANOW, &newSettings);
 }
 
+// não permite ecoar na tela o caracter digitado
 void keyboardNoEcho()
 {
-    tcgetattr(0,&newSettings);
-    newSettings = initialSettings;
-    newSettings.c_lflag &= ~ICANON;
     newSettings.c_lflag &= ~ECHO;
-    newSettings.c_lflag &= ~ISIG;
-    newSettings.c_cc[VMIN] = 1;
-    newSettings.c_cc[VTIME] = 0;
     tcsetattr(0, TCSANOW, &newSettings);
 }
 

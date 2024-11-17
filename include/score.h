@@ -10,8 +10,8 @@ typedef struct {
 } JogadorPonto;
 
 // Declaração das funções
-void salvarJogador(JogadorPonto jogador);
-JogadorPonto *lerJogadores(int quantidade);
+int salvarJogador(JogadorPonto jogador);
+JogadorPonto *lerJogadores();
 int quantidadeJogadores();
 
 #endif /* __SCORE_H__ */

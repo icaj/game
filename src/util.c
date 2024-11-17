@@ -97,11 +97,8 @@ void exibeMaioresPontuadores() {
 
     // se maior que 0 exibe
     if (j > 0) {
-        // limita a 5 jogadores
-        if (j > 5) j = 5;
-
         // obtem relacao de jogadores
-        JogadorPonto *jogadores = lerJogadores(j);
+        JogadorPonto *jogadores = lerJogadores();
 
         // exibe relacao de jogadores se ponteiro nso é invalido
         if(jogadores != NULL) {
@@ -133,3 +130,4 @@ void getNomeJogador(char *nomeJogador) {
     // desabilita visualizacao das teclas pressionadas
     keyboardNoEcho();
 }
+

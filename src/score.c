@@ -2,14 +2,16 @@
 #include <stdlib.h>
 
 // Função para salvar o ponto de um jogador no arquivo
-void salvarJogador(JogadorPonto jogador) {
+int salvarJogador(JogadorPonto jogador) {
     FILE *arquivo = fopen("scores.txt", "a");
     if (arquivo == NULL) {
         printf("Erro na abertura do arquivo!\n");
+        return -1;
     }
 
     fprintf(arquivo, "%s %d\n", jogador.nome, jogador.ponto);
     fclose(arquivo);
+    return 0;
 }
 
 // Função de comparação para ordenar os jogadores em ordem decrescente de pontos
@@ -23,8 +25,7 @@ int comparaPontos(const void *a, const void *b) {
 int quantidadeJogadores() {
     FILE *arquivo = fopen("scores.txt", "r");
     if (arquivo == NULL) {
-        printf("Erro na abertura do arquivo!\n");
-        exit(-1);
+        return -1;
     }
 
     int contador = 0;
@@ -35,23 +36,30 @@ int quantidadeJogadores() {
     while (fscanf(arquivo, "%9s %d", nome, &ponto) == 2) {
         contador++;
     }
-
+    if (contador > 5) contador = 5;
     fclose(arquivo);
     return contador;
 }
 
 // Função para ler o arquivo e retornar um vetor com os cinco jogadores de maior pontuação
-JogadorPonto *lerJogadores(int quantidade) {
+JogadorPonto *lerJogadores() {
     FILE *arquivo = fopen("scores.txt", "r");
     if (arquivo == NULL) {
-        printf("Erro na abertura do arquivo!\n");
+        return NULL;
+    }
+
+    // ler quantidade de jogadores no arquivo
+    int quantidade = quantidadeJogadores();
+    // se quantidade <= 0 finaliza
+    if (quantidade <= 0) {
+        fclose(arquivo);
         return NULL;
     }
 
     // Aloca memória para o vetor de jogadores com base na quantidade obtida
     JogadorPonto *jogadores = malloc(quantidade * sizeof(JogadorPonto));
     if (jogadores == NULL) {
-        printf("Erro ao alocar memória!\n");
+        fclose(arquivo);
         return NULL;
     }
 
@@ -63,26 +71,20 @@ JogadorPonto *lerJogadores(int quantidade) {
     fclose(arquivo);
 
     // Ordena os jogadores em ordem decrescente de pontos
-    qsort(jogadores, quantidade, sizeof(JogadorPonto), comparaPontos);
-
-    // Determina o número de jogadores a retornar (5 ou menos, se houver menos jogadores)
-    int limite;
-    if (quantidade < 5) {
-        limite = quantidade;
-    } else {
-        limite = 5;
-    }
+    qsort(jogadores, i, sizeof(JogadorPonto), comparaPontos);
 
     // Aloca um novo vetor para armazenar apenas os top 5 jogadores
-    JogadorPonto *topJogadores = malloc(limite * sizeof(JogadorPonto));
+    JogadorPonto *topJogadores = malloc(i * sizeof(JogadorPonto));
     if (topJogadores == NULL) {
-        printf("Erro ao alocar memória para topJogadores!\n");
         free(jogadores);  // Libera a memória do vetor original
         return NULL;
     }
 
+    // limite ao maiximo de 5 maiores jogadores
+    if (i > 5) i = 5;
+
     // Copia os top jogadores para o novo vetor
-    for (int j = 0; j < limite; j++) {
+    for (int j = 0; j < i; j++) {
         topJogadores[j] = jogadores[j];
     }
 
