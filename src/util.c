@@ -97,6 +97,7 @@ void exibeMaioresPontuadores() {
 
     // se maior que 0 exibe
     if (j > 0) {
+        if (j > 5) j = 5;
         // obtem relacao de jogadores
         JogadorPonto *jogadores = lerJogadores();
 

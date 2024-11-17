@@ -36,7 +36,6 @@ int quantidadeJogadores() {
     while (fscanf(arquivo, "%9s %d", nome, &ponto) == 2) {
         contador++;
     }
-    if (contador > 5) contador = 5;
     fclose(arquivo);
     return contador;
 }
@@ -79,9 +78,6 @@ JogadorPonto *lerJogadores() {
         free(jogadores);  // Libera a memória do vetor original
         return NULL;
     }
-
-    // limite ao maiximo de 5 maiores jogadores
-    if (i > 5) i = 5;
 
     // Copia os top jogadores para o novo vetor
     for (int j = 0; j < i; j++) {
