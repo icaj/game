@@ -21,4 +21,5 @@ void exibeMaioresPontuadores();
 
 void efeitoInvasores(Jogo *p, int qtdeInvaores);
 
+void sleep(int milissegundos);
 #endif /* __UTIL_H__ */

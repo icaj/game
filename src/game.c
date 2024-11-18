@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <timer.h>
 #include <screen.h>
 #include <keyboard.h>
@@ -58,16 +57,6 @@ void inicializar(int nivel) {
         coluna = ((MAXX - 2) / INVASORES_POR_NIVEL);
     }
     efeitoInvasores(&jogo, jogo.qtdeInvasores);
-}
-
-// aguarda x milessegundos
-void sleep(int milissegundos) {
-    int cont = milissegundos/DELAY;    // tempo para mostrar a tela 
-
-    // delay para mostrar a tela game over
-    while(cont) {
-        if(timerTimeOver() == 1) cont--;
-    }
 }
 
 void exibeTela(char szMensagem[]) {

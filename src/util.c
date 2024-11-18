@@ -1,12 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <keyboard.h>
 #include <screen.h>
 #include <timer.h>
 #include <score.h>
 #include <game.h>
+
+// aguarda x milessegundos
+void sleep(int milissegundos) {
+    int cont = milissegundos/DELAY;    // tempo para mostrar a tela 
+
+    // delay para mostrar a tela game over
+    while(cont) {
+        if(timerTimeOver() == 1) cont--;
+    }
+}
 
 // move as coordenadas dos objetos para o centro da tela a cada iteracao
 int moveParaCentro (Invasor *inv, int centroX, int centroY) {
