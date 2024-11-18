@@ -24,7 +24,7 @@ src-\ <br>
     |-game.c  : programa principal do jogo com a logica de funcionamento e controles principais <br>
     |-score.c : funções para salvar e ler a lista de maiores pontuadores gravada no arquivo scores.txt <br>
     |-util.c  : rotinas de apoio <br>
-    |-keyboard.c, screen.h, timer.h : biblioteca cli-lib para interface com teclado, display e temporizador <br>
+    |-keyboard.h, screen.h, timer.h : biblioteca cli-lib para interface com teclado, display e temporizador <br>
 
 
 <b>Compilação:</b><br>
