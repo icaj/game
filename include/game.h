@@ -15,9 +15,9 @@
 #define DIREITA 'd' 
 #define FIM 'f'
 #define TIRO ' '
-#define INVASORES_POR_NIVEL 19
+#define INVASORES_POR_NIVEL 8
 #define PROJETEIS 5
-#define CHAR_INV  "W"
+#define CHAR_INV  "👾"
 #define TAXA_ATUALIZACAO_INVASORES 80
 #define GAMEOVER -1
 #define PROXIMONIVEL 1

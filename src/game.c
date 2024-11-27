@@ -64,14 +64,17 @@ void exibeTela(char szMensagem[]) {
     screenClear();
     screenGotoxy((MAXX-strlen(szMensagem))/2, MAXY/2);
     screenSetBlink();
-    screenSetColor(RED, DARKGRAY);
+    screenSetColor(YELLOW, DARKGRAY);
     printf("%s", szMensagem);
     screenSetNormal();
     screenUpdate();
 }
 
 void proximoNivel() {
-    exibeTela("P A R A B E N S  !!!");
+    char szJogador[35];
+
+    sprintf(szJogador, "P A R A B E N S  %s !!!", jogo.jogador.nome);
+    exibeTela(szJogador);
     sleep(4000);
 }
 
@@ -133,7 +136,9 @@ void desenhar() {
     // Desenha o jogador
     screenGotoxy(jogo.jogador.x, jogo.jogador.y);
     screenSetColor(CYAN, DARKGRAY);
-    printf("A");
+//    printf("🛕");
+    printf("⚜️");
+
     screenSetNormal();
 
     // Desenha a pontuação
@@ -192,14 +197,22 @@ int atualizar() {
         if (jogo.projeteis[i].ativo) {
             for(int z = 0; z < jogo.qtdeInvasores; z++) {
                 if (jogo.pInv[z].ativo) {
-                    if (jogo.pInv[z].x == jogo.projeteis[i].x && jogo.pInv[z].y == jogo.projeteis[i].y) {
+                    if ((jogo.pInv[z].x == jogo.projeteis[i].x || (jogo.pInv[z].x + 1) == jogo.projeteis[i].x) && jogo.pInv[z].y == jogo.projeteis[i].y) {
                         jogo.pInv[z].ativo = 0;
                         jogo.projeteis[i].ativo = 0;
                         jogo.jogador.pontuacao += 10;
                         screenGotoxy(jogo.pInv[z].x, jogo.pInv[z].y);
+                        printf("🔥");
+                        screenGotoxy(jogo.pInv[z].x, jogo.pInv[z].y+1);
+                        printf("  ");
+                        screenUpdate();
+                        timerUpdateTimer(130);
+                        while(timerTimeOver()!=1);
+                        screenGotoxy(jogo.pInv[z].x, jogo.pInv[z].y);
                         printf(" ");
                         screenGotoxy(jogo.pInv[z].x, jogo.pInv[z].y+1);
-                        printf(" ");
+                        printf("  ");
+                        timerUpdateTimer(DELAY);
                     }
                 }
             }

@@ -36,7 +36,7 @@ int moveParaCentro (Invasor *inv, int centroX, int centroY) {
 }
 
 // desenha na tela os invasores a partir de suas coordenadas
-void desenhaInvasores(Invasor inv[], int qtde, char ch) {
+void desenhaInvasores(Invasor inv[], int qtde) {
     // limpa a tela
     screenClear();
     screenInit(1);
@@ -44,7 +44,7 @@ void desenhaInvasores(Invasor inv[], int qtde, char ch) {
     for (int i = 0; i < qtde; i++) {
         screenGotoxy(inv[i].x, inv[i].y);
         screenSetColor(YELLOW, DARKGRAY);
-        printf("%c", ch);
+        printf("%s", CHAR_INV);
         screenSetNormal();
     }
     // atualiza a tela
@@ -62,7 +62,7 @@ void efeitoInvasores(Jogo *p, int qtdeInvaores) {
 
     int centro = 1;
     while(centro) {
-        desenhaInvasores(inv, qtdeInvaores, 'W');
+        desenhaInvasores(inv, qtdeInvaores);
         centro = 0;
         for(int i = 0; i < qtdeInvaores; i++) {
             centro += moveParaCentro(&inv[i], p->pInv[i].x, p->pInv[i].y);
@@ -70,7 +70,7 @@ void efeitoInvasores(Jogo *p, int qtdeInvaores) {
         // aguarda alguns milessegundos
         while(timerTimeOver() != 1); 
     }
-    desenhaInvasores(inv, qtdeInvaores, 'W');
+    desenhaInvasores(inv, qtdeInvaores);
 }
 
 // exibe efeito grafico na tela inicial do jogo
@@ -90,7 +90,7 @@ void telaInicial() {
     timerInit(DELAY); // inicializa o timer 
 
     // define posicao inicial dos invasores
-    for(int i = 0; i< qtdeInv; i++) {
+    for(int i = 0; i < qtdeInv; i++) {
         inv[i].x = rand() % MAXX;
         inv[i].y = rand() % MAXY;
     }
@@ -99,7 +99,7 @@ void telaInicial() {
     int centro = 1;
     while(centro) {
         // desenha invasores
-        desenhaInvasores(inv, qtdeInv, '*');
+        desenhaInvasores(inv, qtdeInv);
         // muda coordenadas nos invasores em direcao ao centro
         centro = 0;
         for(int i = 0; i < qtdeInv; i++) {
