@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <keyboard.h>
 #include <screen.h>
 #include <timer.h>
@@ -85,10 +86,6 @@ void telaInicial() {
     // mensagem final depois do efeito especial
     char szTitulo[] = ". . : :  S P A C E   I N V A D E R S  : : . .\n";
 
-    screenInit(1);    // inicializa display
-    keyboardInit();   // inicializa o teclado
-    timerInit(DELAY); // inicializa o timer 
-
     // define posicao inicial dos invasores
     for(int i = 0; i < qtdeInv; i++) {
         inv[i].x = rand() % MAXX;
@@ -147,7 +144,11 @@ void exibeMaioresPontuadores() {
 }
 
 // solicita o nome do jogador atual
-void lerNomeJogador(char *nomeJogador) {
+void lerNomeJogador(char *nome) {
+    char nomeJogador[9];
+
+    memset(nomeJogador, 0, sizeof(nomeJogador));
+
     // posiciona o cursor na tela
     screenGotoxy(MAXX/2 - 7, MAXY/2 + 12);
 
@@ -158,9 +159,46 @@ void lerNomeJogador(char *nomeJogador) {
     
     // habilita visualizacao das teclas pressionadas
     keyboardEcho();
+    // ler teclado
     scanf("%8s", nomeJogador);
-    
     // desabilita visualizacao das teclas pressionadas
     keyboardNoEcho();
+
+    // converte em maiusculas
+    for(int i = 0; i < sizeof(nomeJogador); i++) {
+        nomeJogador[i] = toupper(nomeJogador[i]);
+    }
+
+    strcpy(nome, nomeJogador);
 }
 
+int pararContinuar() {
+    int tecla;
+    char mensagem[] = "Tecle F para sair ou qualquer tecla para continuar";
+    char mensagemEspacos[] = "                                                  ";
+
+    // posiciona o cursor na tela
+    screenGotoxy((MAXX - strlen(mensagem))/2, MAXY/2 + 12);
+    printf("%s", mensagem);
+
+    screenUpdate();
+    
+    // zera buffer do teclado
+    while(keyhit()) {
+        readch();
+    }
+
+    // aguarda tecla pressionada do usuario
+    while(1) {
+        if(keyhit()) {
+            tecla = readch();
+            tecla = toupper(tecla);
+            break;
+        }
+    }
+    // posiciona o cursor na tela
+    screenGotoxy((MAXX - strlen(mensagem))/2, MAXY/2 + 12);
+    printf("%s", mensagemEspacos);
+
+    return tecla;
+}

@@ -11,9 +11,9 @@
 #include <stdio.h>
 
 #define DELAY 40
-#define ESQUERDA 'a' 
-#define DIREITA 'd' 
-#define FIM 'f'
+#define ESQUERDA 'A' 
+#define DIREITA 'D' 
+#define FIM 'F'
 #define TIRO ' '
 #define INVASORES_POR_NIVEL 8
 #define PROJETEIS 5
@@ -21,6 +21,7 @@
 #define TAXA_ATUALIZACAO_INVASORES 80
 #define GAMEOVER -1
 #define PROXIMONIVEL 1
+#define NIVELMAXIMO 10
 
 // Estruturas para o jogador, projeteis e os invasores
 typedef struct {
@@ -46,6 +47,7 @@ typedef struct {
     Jogador jogador;
     Projetil projeteis[PROJETEIS];
     int contador;
+    int taxaAtualizacao;
 } Jogo;
 
 #endif /* __GAME_H__ */

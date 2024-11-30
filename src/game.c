@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include <timer.h>
 #include <screen.h>
 #include <keyboard.h>
@@ -20,7 +21,8 @@ void inicializar(int nivel) {
     // iniciaiza o jogo
     jogo.nivel = nivel;
     jogo.qtdeInvasores = jogo.nivel * INVASORES_POR_NIVEL;
-    jogo.contador = TAXA_ATUALIZACAO_INVASORES;
+    jogo.taxaAtualizacao = TAXA_ATUALIZACAO_INVASORES - (((TAXA_ATUALIZACAO_INVASORES/NIVELMAXIMO) * (nivel - 1)))/3;
+    jogo.contador = jogo.taxaAtualizacao;
 
     // aloca em memória invasores necessarios para o jogo
     if(jogo.pInv == NULL) {
@@ -130,7 +132,7 @@ void desenhar() {
     // Desenha cabeçalho
     screenGotoxy(3, 0);
     screenSetColor(LIGHTCYAN, DARKGRAY);
-    printf("Nível %d", jogo.nivel);
+    printf(" Nível %d - Taxa atualização %d ", jogo.nivel, jogo.taxaAtualizacao);
     screenSetNormal();
 
     // Desenha o jogador
@@ -176,7 +178,7 @@ int atualizar() {
                     return GAMEOVER;
             }
         }
-        // se qtde de invasores ativos eh igual a zero, proximo nivel
+        // se qtde de invasores ativos eh igual a zero vai para o proximo nivel
         if (invasoresAtivos == 0) {
             return PROXIMONIVEL;
         }
@@ -192,7 +194,7 @@ int atualizar() {
         }
     }
 
-    // Verifica colisão dos projeteis com os invasores
+    // Verifica se houve colisão dos projeteis com os invasores
     for (int i = 0; i < PROJETEIS; i++) {
         if (jogo.projeteis[i].ativo) {
             for(int z = 0; z < jogo.qtdeInvasores; z++) {
@@ -228,6 +230,7 @@ int controle() {
 
     if(keyhit()) { // verifica se usuario pressionou alguma tecla
        tecla = readch(); // le tecla pressionada
+       tecla = toupper(tecla);
 
         // apaga posicao anterior do jogador
         if (tecla == ESQUERDA || tecla == DIREITA) {
@@ -246,13 +249,13 @@ int controle() {
             for (int i = 0; i < PROJETEIS; i++) {
                 if (!jogo.projeteis[i].ativo) {
                     jogo.projeteis[i].x = jogo.jogador.x;
-                    jogo.projeteis[i].y = jogo.jogador.y - 1;
+                    jogo.projeteis[i].y = jogo.jogador.y;
                     jogo.projeteis[i].ativo = 1;
+                    // soa um beep
+                    printf("\a");
                     break;
                 }
             }
-            // soa um beep
-            printf("\a");
         }
     }
     screenUpdate();
@@ -260,18 +263,16 @@ int controle() {
 }
 
 // Loop principal do jogo
-void loop_jogo() {
+int loop_jogo() {
     // tecla pressionada pelo jogador
     int tecla = 0;
     // status atual do jogo (GAMEOVER ou PROXIMONIVEL)
     int status = 0;
 
-    keyboardInit();   // inicializa o teclado
-    timerInit(DELAY); // inicializa o timer 
-
     while(tecla != FIM) {
         if(timerTimeOver() == 1) { // delay para atualizacao do jogo
             desenhar();            // desenha a tela do jogo
+            tecla = controle();  // verifica tecla pessionada e atualiza variaveis
             status = atualizar();  // atualiza a posicao dos objetos na tela
             // verifica se é fim de jogo
             if (status == GAMEOVER) {
@@ -280,7 +281,7 @@ void loop_jogo() {
             // verifica se vai pro próximo nivel
             } else if (status == PROXIMONIVEL) {
                 // verifica se chegou no nivel máximo
-                if(jogo.nivel == 8) {
+                if(jogo.nivel == NIVELMAXIMO) {
                     zerouJogo();
                     break;
                 }
@@ -288,12 +289,45 @@ void loop_jogo() {
                 proximoNivel();
                 inicializar(jogo.nivel+1);
             }
-            tecla = controle();  // verifica tecla pessionada e atualiza variaveis
             // atualiza timer
             jogo.contador--;
-            if(jogo.contador < 0) jogo.contador = TAXA_ATUALIZACAO_INVASORES;
+            if(jogo.contador < 0) jogo.contador = jogo.taxaAtualizacao;
         }
     }
+
+    return tecla;
+}
+
+void start() {
+    int resultado = 0;
+ 
+    screenInit(1);    // inicializa display
+    keyboardInit();   // inicializa o teclado
+    timerInit(DELAY); // inicializa o timer 
+
+    // exibe tela inicial
+    telaInicial();
+    
+    while(resultado != FIM) {
+        // exibe lista dos maiores jogadores
+        exibeMaioresPontuadores();
+
+        resultado = pararContinuar();
+
+        if(resultado == FIM) break;
+
+        // solicta o nome do jodador
+        lerNomeJogador(jogo.jogador.nome);
+
+        // inicializa variaveis definindo o nivel inicial 
+        inicializar(1);
+
+        // loop principal do jogo
+        resultado = loop_jogo();
+    }
+
+    // libera memoria
+    free(jogo.pInv);
 
     keyboardDestroy(); // finaliza teclado
     screenDestroy();   // finaliza tela
@@ -301,26 +335,6 @@ void loop_jogo() {
 }
 
 int main() {
-    char szNomeJogador[9] = "\0";
-
-    // exibe tela inicial
-    telaInicial();
-
-    // exibe lista dos maiores jogadores
-    exibeMaioresPontuadores();
-
-    // solicta o nome do jodador
-    lerNomeJogador(szNomeJogador);
-    strcpy(jogo.jogador.nome, szNomeJogador);
-
-    // inicializa variaveis definindo o nivel inicial 
-    inicializar(1);
-
-    // loop principal do jogo
-    loop_jogo();
-
-    // libera memoria
-    free(jogo.pInv);
-
+    start();
     return 0;
 }

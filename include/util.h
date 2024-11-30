@@ -22,4 +22,7 @@ void exibeMaioresPontuadores();
 void efeitoInvasores(Jogo *p, int qtdeInvaores);
 
 void sleep(int milissegundos);
+
+int pararContinuar();
+
 #endif /* __UTIL_H__ */
